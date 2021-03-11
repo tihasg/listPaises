@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.tihasg.mylist.R
@@ -26,25 +27,8 @@ class MainActivity : AppCompatActivity(), MainListener {
         setContentView(R.layout.activity_main)
         initViewModel()
         listPais = findViewById(R.id.paisList)
-        val pais: List<Pais> = listOf(Pais(BRASIL), Pais(ALEMANHA))
-
-        adapterPais.items = pais
-        adapterPais.paisList = pais
         setupRecyclerView()
         adapterPais.notifyDataSetChanged()
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                adapterPais.filter.filter(query)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                adapterPais.filter.filter(newText)
-                return true
-            }
-
-        })
     }
 
     private fun setupRecyclerView() {
@@ -59,18 +43,28 @@ class MainActivity : AppCompatActivity(), MainListener {
             ViewModelProviders.of(this, ViewModelFactory()).get(MainViewModel::class.java)
         binding.viewModel = viewModel
         viewModel.listener = this
+        viewModel.setPaises()
+
+        val observerCaio = Observer<List<Pais>> {
+            adapterPais.items = it
+            adapterPais.paisList = it
+        }
+        viewModel.list.observe(this, observerCaio)
     }
 
-    override fun setListaPaises() {
-        viewModel.setPais()
-        TODO("Not yet implemented")
-    }
 
     override fun buscarPaises() {
-        TODO("Not yet implemented")
-    }
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapterPais.filter.filter(query)
+                return true
+            }
 
-    override fun clickPais() {
-        TODO("Not yet implemented")
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapterPais.filter.filter(newText)
+                return true
+            }
+
+        })
     }
 }
