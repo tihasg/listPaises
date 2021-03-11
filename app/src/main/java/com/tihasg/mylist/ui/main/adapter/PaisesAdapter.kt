@@ -1,4 +1,4 @@
-package com.tihasg.mylist.adapter
+package com.tihasg.mylist.ui.main.adapter
 
 import android.view.LayoutInflater
 import android.view.View
