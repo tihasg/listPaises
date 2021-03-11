@@ -5,10 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tihasg.mylist.R
 import com.tihasg.mylist.model.Pais
-import kotlinx.android.synthetic.main.item_paises.view.*
+import com.tihasg.mylist.utils.Constants.ALEMANHA
+import com.tihasg.mylist.utils.Constants.BRASIL
 import kotlin.properties.Delegates
 
 class PaisesAdapter : RecyclerView.Adapter<PaisesViewHolder>(), Filterable {
@@ -72,8 +75,19 @@ class PaisesAdapter : RecyclerView.Adapter<PaisesViewHolder>(), Filterable {
 
 class PaisesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(item: Pais) {
+        val namePais = itemView.findViewById<TextView>(R.id.tv_name_paises)
+        val imageView = itemView.findViewById<ImageView>(R.id.imageView)
+
         with(itemView) {
-            tv_name_paises.text = item.name
+           namePais.text = item.name
+
+            if (item.name == BRASIL){
+               imageView.background = context.resources.getDrawable(R.drawable.brasil)
+            }
+
+            if (item.name == ALEMANHA){
+                imageView.background = context.resources.getDrawable(R.drawable.alemanha)
+            }
         }
     }
 }
